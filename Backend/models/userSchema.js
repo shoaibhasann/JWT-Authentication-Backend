@@ -35,6 +35,26 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+// Mongoose pre middleware to hash user password before creation
+  userSchema.pre('save', async function (next) {
+    try {
+      // Check if the password field has been modified
+      if (!this.isModified('password')) {
+        return next();
+      }
+
+      // Hash the user password using bcrypt with a cost factor of 10
+      this.password = await bcrypt.hash(this.password, 10);
+
+      // Proceed to the next middleware or save operation
+      return next();
+    } catch (error) {
+      // Handle any errors that occur during password hashing
+      return next(error);
+    }
+  });
+
+
 userSchema.methods = {
       jwtToken(){
           return JWT.sign(
