@@ -45,6 +45,7 @@ userSchema.methods = {
       }
 };
 
+
 // Create the User model
 const User = mongoose.model("User", userSchema);
 
